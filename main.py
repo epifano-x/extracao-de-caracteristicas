@@ -88,11 +88,9 @@ def glcm_values(image):
 
 def process_images_for_glcm(letters):
     glcm_values_list = []
-
-    # Chame a função que preenche results_statistical_structural.txt
+    
     structural_statistical_text(letters)
 
-    # Leia os resultados do arquivo
     with open("results_statistical_structural.txt", "r") as result_file:
         structural_results = [line.strip().split() for line in result_file]
 
@@ -107,7 +105,6 @@ def process_images_for_glcm(letters):
 
                 values_list = [float(val) for val in values]
 
-                # Combine valores de glcm_values, structural_results e letter
                 combined_values = values_list + structural_results.pop(0) + [letter]
                 glcm_values_list.append(combined_values)
 
@@ -303,7 +300,7 @@ if __name__ == '__main__':
 
 def glcm_processing(letra):
     image_folder = "MAIUSCULAS"
-    result_folder = "RESULTADO_GLCM"
+    result_folder = "resultados_glcm"
 
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
@@ -329,25 +326,25 @@ def glcm_processing(letra):
             )
 
             fig, axes = plt.subplots(2, 3, figsize=(12, 8))
-            fig.suptitle(f"Métricas GLCM para {letra}{i:05d}", fontsize=16)
+            fig.suptitle(f"Métricas GLCM de {letra}{i:05d}", fontsize=16)
 
             axes[0, 0].imshow(resized_image, cmap="gray")
             axes[0, 0].set_title("Imagem Original")
 
             axes[0, 1].imshow(np.uint8(dissimilarity_scaled), cmap="gray")
-            axes[0, 1].set_title("Dissimilarity")
+            axes[0, 1].set_title("DISSIMILARIDADE")
 
             axes[0, 2].imshow(np.uint8(homogeneity * 255), cmap="gray")
-            axes[0, 2].set_title("Homogeneity")
+            axes[0, 2].set_title("HOMOGENIEDADE")
 
             axes[1, 0].imshow(np.uint8(contrast * 255), cmap="gray")
-            axes[1, 0].set_title("Contrast")
+            axes[1, 0].set_title("CONTRASTE")
 
             axes[1, 1].imshow(np.uint8(ASM_value * 255), cmap="gray")
             axes[1, 1].set_title("ASM")
 
             axes[1, 2].imshow(np.uint8(energy_value * 255), cmap="gray")
-            axes[1, 2].set_title("Energy")
+            axes[1, 2].set_title("ENERGIA")
 
             for ax in axes.flatten():
                 ax.axis("off")
@@ -364,7 +361,7 @@ def glcm_processing(letra):
 
 def structural_and_statistical_processing(letra):
     image_folder = "MAIUSCULAS"
-    result_folder = "RESULTADO_ESTRUTURAIS_ESTATISTICAS"
+    result_folder = "resultados_estatisticos_estruturais"
 
     if not os.path.exists(result_folder):
         os.makedirs(result_folder)
@@ -396,7 +393,7 @@ def structural_and_statistical_processing(letra):
             hist /= hist.sum()
             entropy = -np.sum(np.multiply(hist, np.log2(hist + np.finfo(float).eps)))
 
-            text = f"\nLetra: {letra}\nMedia: {mean:.2f}\nDesvio Padrao: {std_deviation:.2f}\nCurtose: {curtose:.2f}\nEntropia: {entropy:.2f}"
+            text = f"\nLETRA: {letra}\MEDIA: {mean:.2f}\nDESVIO PADRAO: {std_deviation:.2f}\nCURTOSE: {curtose:.2f}\nENTROPIA: {entropy:.2f}"
 
             result_with_text = np.zeros((335, 400), dtype=np.uint8)
             result_with_text[:200, :] = resultado
@@ -412,7 +409,7 @@ def structural_and_statistical_processing(letra):
 
 
 # Chame a função process_images_for_glcm
-#process_images_for_glcm(letters)
+process_images_for_glcm(letters)
 
 
 for letter in letters:
